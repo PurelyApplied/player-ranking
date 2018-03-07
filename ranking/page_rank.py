@@ -3,7 +3,7 @@ import logging
 from typing import List
 
 import networkx as nx
-from page_rank_player_ranking.game_classes import Player, Match
+from .game_classes import Player, Match
 
 INFO = 'info'
 RANK = 'ranking'
@@ -48,9 +48,9 @@ def matches_to_edgelist(ms: List[Match]):
 
 if __name__ == '__main__':
     logging.getLogger('').setLevel(logging.DEBUG)
-    g = nx.Graph()
+    G = nx.Graph()
     players = [Player(), Player(), Player(), Player()]
-    g.add_nodes_from(players)
+    G.add_nodes_from(players)
     matches = [
         Match(players[0], players[1], (1, 0)),
         Match(players[0], players[2], (1, 0)),
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         Match(players[1], players[3], (1, 0)),
         Match(players[3], players[2], (1, 0)),
         ]
-    g.add_weighted_edges_from(matches_to_edgelist(matches), weight=MATCH_HISTORY)
+    G.add_weighted_edges_from(matches_to_edgelist(matches), weight=MATCH_HISTORY)
 
-    page_iteration(g)
+    page_iteration(G)
     pass

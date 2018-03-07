@@ -2,6 +2,7 @@
 from ranking.utils import Retained
 
 
+# noinspection PyUnresolvedReferences
 class Match(Retained):
     def __init__(self, player_a, player_b, score: tuple):
         super().__init__()
