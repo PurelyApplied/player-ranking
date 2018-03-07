@@ -1,37 +1,27 @@
-def generated(ParentClass):
-    class GeneratingWrapper(ParentClass):
-        __identifier = 0
 
-        def __init__(self, *args, **kwargs):
-            super(*args, **kwargs)
-            self.__id = self.__next_identifier()
+class Generated:
+    _next_id = 0
 
-        @classmethod
-        def __next_identifier(cls):
-            to_return = cls.__identifier
-            cls.__identifier += 1
-            return to_return
+    def __init__(self):
+        self._generated_id = self.__tick_id()
 
-        def _get_generated_id(self):
-            return self.__id
-
-    return GeneratingWrapper
+    @classmethod
+    def __tick_id(cls):
+        this_id, cls._next_id = cls._next_id, cls._next_id + 1
+        return this_id
 
 
-def retained(ParentClass):
-    class RetentionWrapper(ParentClass):
-        retained = {}
+class Retained(Generated):
+    retained_instances = {}
 
-        def __init__(self, *args, **kwargs):
-            super(*args, **kwargs)
-            self.retained[self._get_generated_id()] = self
+    def __init__(self):
+        super().__init__()
+        self.add_to_retained_instances(self)
 
-        @classmethod
-        def get_instance(cls, key):
-            return cls.retained.get(key, None)
+    @classmethod
+    def add_to_retained_instances(cls, instance: Generated):
+        cls.retained_instances[instance._generated_id] = instance
 
-        @classmethod
-        def remove_instance(cls, key):
-            cls.retained.pop(key)
-
-    return RetentionWrapper
+    @classmethod
+    def remove_from_retained_instances(cls, instance_id):
+        cls.retained_instances.pop(instance_id)

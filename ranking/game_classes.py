@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-from ranking.utils import retained, generated
+from ranking.utils import Retained
 
 
-@generated
-@retained
-class Match:
+class Match(Retained):
     def __init__(self, player_a, player_b, score: tuple):
+        super().__init__()
         self.player_a = player_a
         self.player_b = player_b
         self.score = score
@@ -20,23 +19,16 @@ class Match:
         return f"<Match({self.player_a}, {self.player_b}, {self.score})>"
 
 
-@generated
-@retained
-class Player:
+class Player(Retained):
     def __init__(self, identifier=None):
-        self.id = identifier if identifier is not None else Player.get_identifier()
+        super().__init__()
+        self.identifier = self._generated_id if identifier is None else identifier
 
     def __repr__(self):
-        return f"<Player(identifier={self.id}>"
+        return f"<Player(identifier={self.identifier}>"
 
     def __lt__(self, other):
-        return self.id < other.id
-
-    @classmethod
-    def get_identifier(cls):
-        identifier = cls.next_identifier
-        cls.next_identifier += 1
-        return identifier
+        return self.identifier < other.identifier
 
 
 class PlayerRating:
@@ -44,7 +36,4 @@ class PlayerRating:
         self.player = player
 
 if __name__ == '__main__':
-    for _ in range(100):
-        Player()
-    for i in range(100):
-        print(Player.get_instance(i)._get_generated_id())
+    pass
